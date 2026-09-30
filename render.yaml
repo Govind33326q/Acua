@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: aquascan-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn src.api:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: CORS_ORIGINS
+        value: https://aquascan-dashboard.onrender.com
+
+  - type: web
+    name: aquascan-dashboard
+    runtime: static
+    buildCommand: npm ci --prefix frontend && npm run build --prefix frontend
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://aquascan-api.onrender.com

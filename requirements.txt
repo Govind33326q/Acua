@@ -1,0 +1,18 @@
+# YOLO inference and image handling
+Pillow>=10,<13
+ultralytics>=8.0.0,<9.0.0
+
+# FastAPI backend and image uploads
+fastapi>=0.115,<1.0
+uvicorn>=0.30,<1.0
+python-multipart>=0.0.9,<1.0
+PyYAML>=6,<7
+
+# PDF detection reports
+reportlab>=4.0,<5.0
+streamlit
+ultralytics
+opencv-python-headless
+Pillow
+numpy<2
+Pillow
