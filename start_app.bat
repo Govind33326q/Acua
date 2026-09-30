@@ -1,33 +1,29 @@
 @echo off
-cd /d "D:\AquaVisionaries\AquaVisinaries\AquaVisinaries"
-set "VITE_API_URL=http://127.0.0.1:8001"
-set "CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://127.0.0.1:5174,http://localhost:5175,http://127.0.0.1:5175"
+rem AquaVisionaries - one-window start (Windows). Run from any folder.
+setlocal
+cd /d "%~dp0"
+set "PORT=8001"
 
-where python >nul 2>nul
-if errorlevel 1 (
-    echo Python is not installed or not on PATH.
-    exit /b 1
-)
+where py >nul 2>nul
+if %errorlevel%==0 (set "PY=py -3") else (set "PY=python")
 
 if not exist ".venv\Scripts\python.exe" (
-    echo Creating virtual environment...
-    C:\Users\govin\AppData\Local\Programs\Python\Python312\python.exe -m venv .venv
+    echo Creating virtual environment with %PY% ...
+    %PY% -m venv .venv || (echo Python 3.12 was not found. Install it from python.org and tick "Add to PATH". & pause & exit /b 1)
+    call .venv\Scripts\activate.bat
+    python -m pip install --upgrade pip
+    python -m pip install -r requirements.txt || (echo Dependency installation failed. & pause & exit /b 1)
+) else (
+    call .venv\Scripts\activate.bat
 )
 
-call .venv\Scripts\activate.bat
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-
-start "AquaScan Backend" cmd /k "cd /d ""D:\AquaVisionaries\AquaVisinaries\AquaVisinaries"" && call .venv\Scripts\activate.bat && python -m uvicorn src.api:app --host 127.0.0.1 --port 8001"
-
-cd frontend
-set "PATH=C:\Program Files\nodejs;%PATH%"
-if not exist "node_modules" (
-    echo Installing frontend dependencies...
-    "C:\Program Files\nodejs\npm.cmd" install
+if not exist "frontend\dist\index.html" (
+    echo The built interface frontend\dist is missing. Build it with: cd frontend ^&^& npm install ^&^& npm run build
+    pause & exit /b 1
 )
-start "AquaScan Frontend" cmd /k "cd /d ""D:\AquaVisionaries\AquaVisinaries\AquaVisinaries\frontend"" && set "VITE_API_URL=http://127.0.0.1:8001" && "C:\Program Files\nodejs\npm.cmd" run dev -- --host 127.0.0.1 --port 5174 --strictPort"
 
-cd /d "D:\AquaVisionaries\AquaVisinaries\AquaVisinaries"
-printf "Backend and frontend startup commands launched.\n"
-printf "Open http://127.0.0.1:5174/\n"
+echo.
+echo AquaVisionaries is starting on http://127.0.0.1:%PORT%/
+echo Keep this window open. Press Ctrl+C to stop.
+start "" "http://127.0.0.1:%PORT%/"
+python -m uvicorn src.api:app --host 127.0.0.1 --port %PORT%

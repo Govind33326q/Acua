@@ -1,18 +1,25 @@
-# YOLO inference and image handling
+# AquaVisionaries backend + Streamlit app. Tested with Python 3.12,
+# ultralytics 8.4.163, torch 2.14 (CPU), numpy 2.4, fastapi 0.141, streamlit 1.64.
+# ultralytics installs torch, torchvision and opencv-python.
+ultralytics>=8.3,<9.0
+numpy>=1.26
 Pillow>=10,<13
-ultralytics>=8.0.0,<9.0.0
+PyYAML>=6,<7
 
-# FastAPI backend and image uploads
+# FastAPI backend
 fastapi>=0.115,<1.0
 uvicorn>=0.30,<1.0
 python-multipart>=0.0.9,<1.0
-PyYAML>=6,<7
 
-# PDF detection reports
+# PDF reports
 reportlab>=4.0,<5.0
-streamlit
-ultralytics
-opencv-python-headless
-Pillow
-numpy<2
-Pillow
+
+# Optional: NMEA GPS over serial/USB (UDP/TCP/log replay need nothing extra)
+pyserial>=3.5
+
+# Streamlit variant (Aqua-Scan/app.py, app.py)
+streamlit>=1.35
+
+# Tests (optional)
+pytest>=8
+httpx>=0.27
